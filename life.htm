@@ -1,0 +1,124 @@
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Life</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  
+	<style type="text/css">
+		body {
+			background-color: #444;
+			margin: 0; padding: 0;
+			color: whitesmoke;
+			font-family: 'Atkinson Hyperlegible';
+			font-size: 1.2em;
+		}
+		.container { 
+			border: solid 2px #333;
+			margin: 2vh 2vw;
+			height: 95vh;
+			background-color: #22222288;
+			text-align: center;
+		}
+		.container button {
+			margin-top: 2vh;
+			padding-block: 1vh;
+			padding-inline: 2vh;
+		}
+		h3 {
+			letter-spacing: 1vw;
+		}
+		.gameboard {
+			outline: solid 1px whitesmoke;
+			margin-inline: auto;
+			width: 500px;
+			height: 500px;
+		}
+
+		.gameboard .cell {
+			outline: 0;
+			display: inline-block;
+			width: 5px; height: 5px;
+			margin: 0; padding: 0;
+			user-select: none;
+		}
+
+		.gameboard .cell.alive {
+			background-color: whitesmoke;
+		}
+
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h3 >LIFE</h3>
+		<div class="gameboard">
+			not loaded 
+		</div>
+		<button type="button" onclick="javascript:loadGame()" id="goButton">
+			Go
+		</button>
+		<button type="button" onclick="javascript:killGame()" id="stopButton" style="display: none;">
+			Stop
+		</button>
+	</div>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.slim.min.js">
+	</script>
+	<script type="text/javascript">
+		var matrix = [];
+		var kill_requested = false;
+		var loopTimerId = -1;
+		function initMatrixData () {
+			for(let i = 0; i < 100; i++) {
+				let cells = []
+				for(let j = 0; j < 100; j++) {
+					let cell_alive = Math.floor(Math.random() * 16);
+					let marker = cell_alive == 1 ? 1 : 0;
+					cells.push(marker);					
+				}	
+				matrix.push(cells);
+			}
+			console.log(matrix);
+		}
+
+		function renderGrid() {
+			$(".gameboard").empty();
+			for(let i = 0; i < 100; i++) {
+				for(let j = 0; j < 100; j++) {
+					let cell_alive = matrix[i][j];
+					let cell_alive_css = cell_alive == 1 ? " alive": " dead";		
+					$('.gameboard').append(`<span class="cell${cell_alive_css}">&nbsp;</span>`)
+				}	
+			}
+		}
+
+		function runGameLoop() {
+			matrix = [];
+			initMatrixData();
+			renderGrid();
+			if (kill_requested) {
+				window.clearInterval(loopTimerId);
+				kill_requested = false;
+				$("#stopButton").hide();
+				$("#goButton").show();
+			}
+		}
+
+		function killGame() {
+			kill_requested = true;
+		}
+
+		function loadGame() {
+			// empty container
+			
+			initMatrixData();
+			renderGrid();
+			$("#goButton").hide();
+			$("#stopButton").show();
+			
+			loopTimerId = window.setInterval(runGameLoop, 1000);
+		}
+	</script>
+</body>
+</html>

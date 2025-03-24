@@ -1,0 +1,195 @@
+:root {
+  --commandTextColor: whitesmoke;
+  --navBackgroundColor: #66666666;
+  --navBackgroundColor2: #666666CC;
+  --commonFontFamily: "Big Shoulders Stencil", sans-serif;
+}
+
+body, a, button, h1, h2, h3, h4, h5, h6 {
+  font-size: 1.25em;
+  letter-spacing: 4px;
+}
+
+body {
+  font-family: var(--commonFontFamily);
+}
+.navbar {
+  padding-inline: 1em;
+  z-index: 5;
+}
+.navbar a {
+  font-family: var(--commonFontFamily);
+}
+.navbar a.navbar-brand {
+  text-decoration: none;
+  font-size: 1.25em;
+}
+.float-right {
+  float: right;
+}
+.disabled {
+  opacity: 0.65;
+  user-select: none;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+button {
+  font-family: var(--commonFontFamily);
+}
+.menu-button, .menu-button:hover, menu-button:active {
+  text-decoration: none;
+  font-family: var(--commonFontFamily);
+  user-select: none;
+}
+.notdead-logo {
+  width: 300px;
+}
+
+.btn-outline-notdead {
+  border-color: #D7228F;
+  color: #D7228F !important;
+  background-color: #101010;
+}
+
+.btn-outline-notdead:hover {
+  border-color: #e7127F;
+  color: white !important;
+  background-color: #D7228F;
+}
+
+.text-notdead {
+  color: #D7228F !important;
+}
+.navbar-brand .text-notdead {
+  text-shadow: #D7228F -3px 1px 18px;
+  border: solid 2px #060606;
+  font-weight: bold;
+  color: #d7228Faa;
+}
+
+.btn-notdead {
+  background-color: #d7228F;
+  border-color: #e7127F;
+
+}
+
+.border-notdead {
+  border-color: #d7228F;
+}
+.suggest-form {
+  background-color: transparent;
+  font-size: 1.25em;
+}
+
+.suggest-form:focus {
+  background-color: #06060623;
+}
+  .side-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: min(350px, 95vw);
+  display: none;
+  z-index: 1;
+  padding-block-start: 15vh;
+  background: #10101088;
+}
+.side-menu.open {
+  display: block;
+}
+.side-menu ul {
+  list-style: none;
+  padding: 0;
+}
+.side-menu ul li {
+  padding: 0;
+}
+.side-menu ul li a {
+  font-size: 1.1em;
+  padding: 0.5em;
+  width: 100%;
+  border: 0;
+  display: block;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.stage {
+  background-color: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  overflow-y: auto;
+  z-index: -2;
+}
+
+.btn:focus {
+  box-shadow: none;
+}
+
+.no-touch {
+  user-select: none;
+}
+
+.app-pane {
+  margin-block-start: max(7vh, 77px);
+  height: 90%;
+  width: 100%;
+  padding: 2vh 2vw;
+}
+
+.ald {
+  font-family: 'Atkinson Hyperlegible';
+
+}
+
+.contractItem {
+  background-color: #D7228F17;
+  font-family: 'Atkinson Hyperlegible';
+  outline: solid 3px #D7228F88;
+  width: 80vw;
+  margin-inline: auto;
+  padding: 12px;
+  margin-block-end: 12px;
+}
+
+  .contractItem small {
+      font-family: 'Atkinson Hyperlegible';
+      font-size: 0.9em;
+  }
+
+#contracts-masterList {
+  margin-block-start: 24px;
+}
+
+#contracts-masterList .contractItem:nth-child(1) {
+  border-start-start-radius: 20px;
+  border-start-end-radius: 20px;
+}
+
+#contracts-masterList .contractItem:last-child {
+  border-end-start-radius: 20px;
+  border-end-end-radius: 20px;
+}
+
+.submitCodePanel {
+  display: none;
+}
+.submitCodePanel.show {
+  display: block;
+}
+.sendConfButtonPanel {
+  display: block;
+}
+
+.sendConfButtonPanel.hide {
+  display: none;
+}
+
+.alert {
+  box-shadow: #34343433 -4px -4px 10px 10px 10px;
+}
