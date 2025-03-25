@@ -38,8 +38,8 @@
 		.gameboard {
 			outline: solid 1px whitesmoke;
 			margin-inline: auto;
-			width: 500px;
-			height: 500px;
+			width: 400px;
+			height: 400px;
 		}
 
 		.gameboard .cell {
@@ -60,7 +60,7 @@
 	<div class="container">
 		<h3 >LIFE</h3>
 		<div class="gameboard">
-			<span style="display: inline-block; margin-top: 220px;">PRESS GO TO START THE SIMULATION</span> 
+			<span style="display: inline-block; margin-top: 186px;">PRESS GO TO START THE SIMULATION</span> 
 		</div>
 		<button type="button" onclick="javascript:loadGame()" id="goButton">
 			Go
@@ -79,6 +79,8 @@
 		var kill_requested = false;
 		var loopTimerId = -1;
 		var density_vector = 7;
+		var gridSize = 80;
+		var interval = 250;
 
 		var life = {
 			
@@ -129,9 +131,9 @@
 
 		function initMatrixData () {
 			let matrix = [];
-			for(let i = 0; i < 100; i++) {
+			for(let i = 0; i < gridSize; i++) {
 				let cells = []
-				for(let j = 0; j < 100; j++) {
+				for(let j = 0; j < gridSize; j++) {
 					let cell_alive = Math.floor(Math.random() * density_vector);
 					let marker = cell_alive == 1 ? 1 : 0;
 					cells.push(marker);					
@@ -144,8 +146,8 @@
 
 		function renderGrid(gridata) {
 			$(".gameboard").empty();
-			for(let i = 0; i < 100; i++) {
-				for(let j = 0; j < 100; j++) {
+			for(let i = 0; i < gridSize; i++) {
+				for(let j = 0; j < gridSize; j++) {
 					let cell_alive = gridata[i][j];
 					let cell_alive_css = cell_alive == 1 ? " alive": " dead";		
 					$('.gameboard').append(`<span class="cell${cell_alive_css}">&nbsp;</span>`)
@@ -192,7 +194,7 @@
 			//$("#stepButton").show();
 			$("#stopButton").show();
 			
-			loopTimerId = window.setInterval(runGameLoop, 1100);
+			loopTimerId = window.setInterval(runGameLoop, interval);
 		}
 	</script>
 </body>
