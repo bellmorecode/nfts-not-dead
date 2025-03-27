@@ -3,57 +3,17 @@
   <meta charset="utf-8" />
   <title>Life</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 	<style type="text/css">
-		body {
-			background-color: #444;
-			margin: 0; padding: 0;
-			color: whitesmoke;
-			font-family: 'Atkinson Hyperlegible';
-			font-size: 1.2em;
-		}
-		button {
-			font-family: 'Atkinson Hyperlegible';
-			letter-spacing: 0.25vw;
-			text-transform: uppercase;
-			font-weight: 600;
-		}
-		.container { 
-			border: solid 2px #333;
-			margin: 2vh 2vw;
-			height: 95vh;
-			background-color: #22222288;
-			text-align: center;
-		}
-		.container button {
-			margin-top: 2vh;
-			padding-block: 1vh;
-			padding-inline: 2vh;
-		}
-		h3 {
-			letter-spacing: 1vw;
-		}
-		.gameboard {
-			outline: solid 1px whitesmoke;
-			margin-inline: auto;
-			width: 400px;
-			height: 400px;
-		}
-
-		.gameboard .cell {
-			outline: 0;
-			display: inline-block;
-			width: 5px; height: 5px;
-			margin: 0; padding: 0;
-			user-select: none;
-		}
-
-		.gameboard .cell.alive {
-			background-color: whitesmoke;
-		}
-
+		body { background-color: #444; margin: 0; padding: 0; color: whitesmoke; font-family: 'Atkinson Hyperlegible'; font-size: 1.2em; }
+		button { font-family: 'Atkinson Hyperlegible'; letter-spacing: 0.25vw; text-transform: uppercase; font-weight: 600; }
+		.container {  border: solid 2px #333; margin: 2vh 2vw; height: 95vh; background-color: #22222288; text-align: center; }
+		.container button { margin-top: 2vh; padding-block: 1vh; padding-inline: 2vh; }
+		h3 { letter-spacing: 1vw; }
+		.gameboard { outline: solid 1px whitesmoke; margin-inline: auto; width: 400px; height: 400px; }
+		.gameboard .cell { outline: 0; display: inline-block; width: 5px; height: 5px; margin: 0; padding: 0; user-select: none; }
+		.gameboard .cell.alive { background-color: whitesmoke; }
 	</style>
 </head>
 <body>
@@ -62,40 +22,23 @@
 		<div class="gameboard">
 			<span style="display: inline-block; margin-top: 186px;">PRESS GO TO START THE SIMULATION</span> 
 		</div>
-		<button type="button" onclick="javascript:loadGame()" id="goButton">
-			Go
-		</button>
-		<button type="button" onclick="javascript:runGameLoop()" id="stepButton" style="display: none;">
-			Step
-		</button>
-		<button type="button" onclick="javascript:killGame()" id="stopButton" style="display: none;">
-			Stop
-		</button>
+		<button type="button" onclick="javascript:loadGame()" id="goButton"> Go </button>
+		<button type="button" onclick="javascript:killGame()" id="stopButton" style="display: none;"> Stop </button>
 	</div>
-	<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.slim.min.js">
-	</script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.slim.min.js"> </script>
 	<script type="text/javascript">
-		
 		var kill_requested = false;
 		var loopTimerId = -1;
 		var density_vector = 5;
 		var gridSize = 80;
 		var interval = 250;
-
 		var life = {
-			
 			applyGeneration: function (data) {
-				//console.log('apply')
 				let output = JSON.parse(JSON.stringify(data));
-
 				for(let y = 0; y < data.length; y++) {
 					for(let x = 0; x < data[y].length; x++) {
-
 						let surrounding_life = 0;
 						let current_state = data[y][x];
-
-						//console.log(`(${y}, ${x})`);
-
 						for (let a = y - 1; a <= y + 1; a++) {
 							for(let b = x - 1; b <= x + 1; b++) {
 								if (a == y && b == x) continue;
@@ -103,32 +46,25 @@
 								let pos_state = data[a][b];
 								if (pos_state) {
 									surrounding_life++;
-									//console.log(".")
 								}
 							}
 						}
-
 						if (surrounding_life < 2 || surrounding_life > 3) {
 							output[y][x] = 0; // die
-							//console.log("v");
 						} else {
 							if (current_state == 1) {
 								output[y][x] = current_state; // same state
 							} else {
 								if (surrounding_life == 3) {
 									output[y][x] = 1; // born
-									//console.log("^");
 								}
 							}
 						}
-						
 					}
 				}
-
 				return output;
 			}
 		}
-
 		function initMatrixData () {
 			let matrix = [];
 			for(let i = 0; i < gridSize; i++) {
@@ -140,10 +76,8 @@
 				}	
 				matrix.push(cells);
 			}
-			//console.log(matrix);
 			return matrix;
 		}
-
 		function renderGrid(gridata) {
 			$(".gameboard").empty();
 			for(let i = 0; i < gridSize; i++) {
@@ -154,46 +88,30 @@
 				}	
 			}
 		}
-
 		function runGameLoop() {
 			console.log('loop');
 			let start = new Date();
-
 			if (kill_requested) {
 				window.clearInterval(loopTimerId);
 				kill_requested = false;
 				$("#stopButton").hide();
-				$("#stepButton").hide();
 				$("#goButton").show();
 			}
-
 			let json = localStorage.getItem("life_data");
 			let matrix = JSON.parse(json);
-
 			output = life.applyGeneration(matrix);
 			renderGrid(output);
-
 			localStorage.setItem("life_data", JSON.stringify(output));
-
 			let finish = new Date();
 			console.log({ start, finish });
 		}
-
-		function killGame() {
-			kill_requested = true;
-		}
-
+		function killGame() { kill_requested = true; }
 		function loadGame() {
-			// empty container
-			
 			let data = initMatrixData();
 			renderGrid(data);
-
 			localStorage.setItem("life_data", JSON.stringify(data));
 			$("#goButton").hide();
-			//$("#stepButton").show();
 			$("#stopButton").show();
-			
 			loopTimerId = window.setInterval(runGameLoop, interval);
 		}
 	</script>
