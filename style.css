@@ -3,21 +3,33 @@
   --navBackgroundColor: #66666666;
   --navBackgroundColor2: #666666CC;
   --commonFontFamily: "Big Shoulders Stencil", sans-serif;
-  --titleFontFamily: "Big Shoulders Stencil", sans-serif;
+  --titleFontFamily: "Drippy", sans-serif;
   --textFontFamily: "Atkinson Hyperlegible", sans-serif;
 }
 
-body, a, button, h1, h2, h3, h4, h5, h6 {
-  font-size: 1.25em;
-  letter-spacing: 4px;
-}
-
-body {
-  
+@font-face {
+  font-family: 'Drippy';
+  src: url('/fonts/adrip1.ttf');
 }
 
 p {
   font-family: var(--textFontFamily);
+  font-size: 14pt ;
+}
+
+.title-notdead {
+  font-family: var(--commonFontFamily);
+  letter-spacing: 0.25vw;
+}
+
+.xbtn { 
+  font-family: var( --textFontFamily);
+  font-size: 1.0em;
+  font-weight: 600;
+}
+
+.jumbotron {
+  margin-block: 1vh;
 }
 
 .navbar {
@@ -25,11 +37,11 @@ p {
   z-index: 5;
 }
 .navbar a {
-  font-family: var(--commonFontFamily);
+  font-family: var(--titleFontFamily);
+  font-size: 2em ;
 }
 .navbar a.navbar-brand {
   text-decoration: none;
-  font-size: 1.25em;
 }
 .float-right {
   float: right;
@@ -199,4 +211,11 @@ button {
 
 .alert {
   box-shadow: #34343433 -4px -4px 10px 10px 10px;
+}
+
+@media (max-width: 500px) {
+  .navbar a {
+    font-family: var(--titleFontFamily);
+    font-size: 4em;
+  }
 }
