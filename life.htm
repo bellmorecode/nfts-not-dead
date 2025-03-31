@@ -1,11 +1,11 @@
 <html>
-<head>
-  <meta charset="utf-8" />
-  <title>Life</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-	<style type="text/css">
+	<head>
+		<meta charset="utf-8" />
+		<title>Life</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+		<style type="text/css">
 		body { background-color: #444; margin: 0; padding: 0; color: whitesmoke; font-family: 'Atkinson Hyperlegible'; font-size: 1.2em; }
 		button { font-family: 'Atkinson Hyperlegible'; letter-spacing: 0.25vw; text-transform: uppercase; font-weight: 600; }
 		.container {  border: solid 2px #333; margin: 2vh 2vw; height: 95vh; background-color: #22222288; text-align: center; }
@@ -14,105 +14,106 @@
 		.gameboard { outline: solid 1px whitesmoke; margin-inline: auto; width: 400px; height: 400px; }
 		.gameboard .cell { outline: 0; display: inline-block; width: 5px; height: 5px; margin: 0; padding: 0; user-select: none; }
 		.gameboard .cell.alive { background-color: whitesmoke; }
-	</style>
-</head>
-<body>
-	<div class="container">
-		<h3 >LIFE</h3>
-		<div class="gameboard">
-			<span style="display: inline-block; margin-top: 186px;">PRESS GO TO START THE SIMULATION</span> 
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h3 >LIFE</h3>
+			<div class="gameboard">
+				<span style="display: inline-block; margin-top: 186px;">PRESS GO TO START THE SIMULATION</span> 
+			</div>
+			<button type="button" onclick="javascript:loadGame()" id="goButton"> Go </button>
+			<button type="button" onclick="javascript:killGame()" id="stopButton" style="display: none;"> Stop </button>
 		</div>
-		<button type="button" onclick="javascript:loadGame()" id="goButton"> Go </button>
-		<button type="button" onclick="javascript:killGame()" id="stopButton" style="display: none;"> Stop </button>
-	</div>
-	<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.slim.min.js"> </script>
-	<script type="text/javascript">
-
-		var kill_requested = false;
-		var loopTimerId = -1;
-		var density_vector = 25;
-		var magic_number = 13;
-		var gridSize = 80;
-		var interval = 395;
-
-		function initMatrixData () {
-			let matrix = [];
-			$(".gameboard").empty();
-			for(let i = 0; i < gridSize; i++) {
-				let cells = []
-				for(let j = 0; j < gridSize; j++) {
-					let cell_alive = Math.floor(Math.random() * density_vector);
-					let cell_alive_css = cell_alive == magic_number ? " alive": " dead";		
-					$('.gameboard').append(`<span data-posX="${j}" data-posY="${i}" class="cell${cell_alive_css}">&nbsp;</span>`)
-					let marker = cell_alive == magic_number ? 1 : 0;
-					cells.push(marker);					
-				}	
-				matrix.push(cells);
-			}
-			return matrix;
-		}
-
-		var applyGeneration = function (data) 
-		{
-			let output = JSON.parse(JSON.stringify(data));
-			for(let y = 0; y < data.length; y++) {
-				for(let x = 0; x < data[y].length; x++) {
-					let surrounding_life = 0;
-					let current_state = data[y][x];
-					for (let a = y - 1; a <= y + 1; a++) {
-						for(let b = x - 1; b <= x + 1; b++) {
-							if (a == y && b == x) continue;
-							if (a < 0 || a >= data.length || b < 0 || b >= data.length) continue;
-							let pos_state = data[a][b];
-							if (pos_state) {
-								surrounding_life++;
+		<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.slim.min.js"> </script>
+		<script type="text/javascript">
+			var kill_requested = false;
+			var loopTimerId = -1;
+			var density_vector = 5;
+			var gridSize = 80;
+			var interval = 250;
+			var life = {
+				applyGeneration: function (data) {
+					let output = JSON.parse(JSON.stringify(data));
+					for(let y = 0; y < data.length; y++) {
+						for(let x = 0; x < data[y].length; x++) {
+							let surrounding_life = 0;
+							let current_state = data[y][x];
+							for (let a = y - 1; a <= y + 1; a++) {
+								for(let b = x - 1; b <= x + 1; b++) {
+									if (a == y && b == x) continue;
+									if (a < 0 || a >= data.length || b < 0 || b >= data.length) continue;
+									let pos_state = data[a][b];
+									if (pos_state) {
+										surrounding_life++;
+									}
+								}
+							}
+							if (surrounding_life < 2 || surrounding_life > 3) {
+								output[y][x] = 0; // die
+							} else {
+								if (current_state == 1) {
+									output[y][x] = current_state; // same state
+								} else {
+									if (surrounding_life == 3) {
+										output[y][x] = 1; // born
+									}
+								}
 							}
 						}
 					}
-					if (surrounding_life < 2 || surrounding_life > 3) {
-						output[y][x] = 0; // die
-						$(`span[data-posX="${x}"][data-posY="${y}"]`).removeClass("alive");
-					} else {
-						if (current_state == 1) {
-							output[y][x] = current_state; // same state
-							// DO NOTHING
-						} else {
-							if (surrounding_life == 3) {
-								output[y][x] = 1; // born
-								$(`span[data-posX="${x}"][data-posY="${y}"]`).addClass("alive");
-							}
-						}
-					}
+					return output;
 				}
 			}
-			return output;
-		};		
-
-		
-		function killLoop () {
-			window.clearInterval(loopTimerId);
-			kill_requested = false;
-			$("#stopButton").hide();
-			$("#goButton").show();
-		}
-
-		function runGameLoop() {
-			if (kill_requested) {
-				killLoop();	
+			function initMatrixData () {
+				let matrix = [];
+				for(let i = 0; i < gridSize; i++) {
+					let cells = []
+					for(let j = 0; j < gridSize; j++) {
+						let cell_alive = Math.floor(Math.random() * density_vector);
+						let marker = cell_alive == 1 ? 1 : 0;
+						cells.push(marker);					
+					}	
+					matrix.push(cells);
+				}
+				return matrix;
 			}
-			let json = localStorage.getItem("life_data");
-			let matrix = JSON.parse(json);
-			output = applyGeneration(matrix);
-			localStorage.setItem("life_data", JSON.stringify(output));
-		}
-		function killGame() { kill_requested = true; }
-		function loadGame() {
-			let data = initMatrixData();
-			localStorage.setItem("life_data", JSON.stringify(data));
-			$("#goButton").hide();
-			$("#stopButton").show();
-			loopTimerId = window.setInterval(runGameLoop, interval);
-		}
-	</script>
-</body>
+			function renderGrid(gridata) {
+				$(".gameboard").empty();
+				for(let i = 0; i < gridSize; i++) {
+					for(let j = 0; j < gridSize; j++) {
+						let cell_alive = gridata[i][j];
+						let cell_alive_css = cell_alive == 1 ? " alive": " dead";		
+						$('.gameboard').append(`<span class="cell${cell_alive_css}">&nbsp;</span>`)
+					}	
+				}
+			}
+			function runGameLoop() {
+				//console.log('loop');
+				let start = new Date();
+				if (kill_requested) {
+					window.clearInterval(loopTimerId);
+					kill_requested = false;
+					$("#stopButton").hide();
+					$("#goButton").show();
+				}
+				let json = localStorage.getItem("life_data");
+				let matrix = JSON.parse(json);
+				output = life.applyGeneration(matrix);
+				renderGrid(output);
+				localStorage.setItem("life_data", JSON.stringify(output));
+				//let finish = new Date();
+				//console.log({ start, finish });
+			}
+			function killGame() { kill_requested = true; }
+			function loadGame() {
+				let data = initMatrixData();
+				renderGrid(data);
+				localStorage.setItem("life_data", JSON.stringify(data));
+				$("#goButton").hide();
+				$("#stopButton").show();
+				loopTimerId = window.setInterval(runGameLoop, interval);
+			}
+		</script>
+	</body>
 </html>

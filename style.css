@@ -22,6 +22,11 @@ p {
   letter-spacing: 0.25vw;
 }
 
+.text-drippy {
+  font-family: var(--titleFontFamily);
+  letter-spacing: 0.5vw;
+}
+
 .xbtn { 
   font-family: var( --textFontFamily);
   font-size: 1.0em;
@@ -229,7 +234,7 @@ button {
   height: 60vh;
   margin-inline: auto;
   text-align: center;
-  padding-top: 38%;
+  padding-block-start: 10vh;
   font-family: Roboto;
 }
 

@@ -39,12 +39,12 @@
 			<div class="desc">DESC</div>
 
 			<div class="buttons">
-				<button type="button" data-action="start-tutorial" onclick="nnd.game.startGame()">START</button>
+				<button type="button" data-action="start-tutorial" onclick="nnd.game.tutorial.start()">START</button>
 				<button type="button" data-action="start-game" onclick="nnd.game.startGame()">START</button>
 				<button type="button"  data-action="option-approve">APPROVE</button>
 				<button type="button"  data-action="option-reject">REJECT</button>
 				<button type="button"  data-action="continue-game">CONTINUE</button>
-				<button type="button"  data-action="continue-tutorial">CONTINUE</button>
+				<button type="button"  data-action="continue-tutorial" onclick="nnd.game.tutorial.showWarning()">CONTINUE</button>
 				<button type="button"  data-action="restart-game">PLAY AGAIN</button>
 				<button type="button"  data-action="pay-to-play">REDEEM</button>
 			</div>

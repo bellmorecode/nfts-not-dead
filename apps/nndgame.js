@@ -6,26 +6,26 @@ var nnd = {
 				splashScreen: {
 					content: {
 						type: "markup", 
-						value: `<h3>NFTS NOT DEAD: 'Not my NFTs' game</h3>`
+						value: `<h3 class="text-drippy">NFTS NOT DEAD: 'Not my NFTs' game</h3>`
 					},
-					description: `<p>explainer</p>`,
+					description: `<p>Can you spot the imposter?</p>`,
+					buttons: ["start-tutorial"]
+				},
+				introScreen: {
+					content: {
+						type: "markup", 
+						value: `<h3 class="text-drippy">How to play: 'Not my NFTs' game</h3>`
+					},
+					description: `<p>Find the copycat NFT... </p>`,
+					buttons: ["continue-tutorial"]
+				},
+				warningScreen: {
+					content: {
+						type: "markup", 
+						value: `<h3 class="text-drippy">Warning</h3>`
+					},
+					description: `<p>Be Careful... </p>`,
 					buttons: ["start-game"]
-				},
-				introScreen: {
-					content: {
-						type: "markup", 
-						value: `<h3>How to play: 'Not my NFTs' game</h3>`
-					},
-					description: `<p>Find the copycat NFT... </p>`,
-					buttons: ["continue-game"]
-				},
-				introScreen: {
-					content: {
-						type: "markup", 
-						value: `<h3>How to play: 'Not my NFTs' game</h3>`
-					},
-					description: `<p>Find the copycat NFT... </p>`,
-					buttons: ["continue-game"]
 				}
 			},
 			__loadScreen: function (screen) {
@@ -36,15 +36,26 @@ var nnd = {
 					$(`[data-action="${b}"]`).show();		
 				})
 			},
-			start: function () {
+			showWarning: function () {
+				nnd.game.tutorial.__loadScreen(nnd.game.tutorial.screens.warningScreen);	
+			}, 
+			prepTutorial: function () {
 				nnd.game.tutorial.__loadScreen(nnd.game.tutorial.screens.splashScreen);	
+			}, 
+			start: function () {
+				nnd.game.tutorial.__loadScreen(nnd.game.tutorial.screens.introScreen);	
 			}
 		},
 		resetGame: function () {
-			nnd.game.tutorial.start();
+			nnd.game.tutorial.prepTutorial();
 		},
 		startGame: function () {
-			nnd.game.tutorial.__loadScreen(nnd.game.tutorial.screens.introScreen);	
+			alert('start game here!');
+		},
+		hideGame: function () {
+			$(".game-stage .art").html("<h2 class='text-drippy'>Connect to Play</h2>");
+				$(".game-stage .desc").html("");
+			$(".game-stage .buttons button").hide();
 		}
 	},
 	ux: {
@@ -148,6 +159,7 @@ var nnd = {
 			nnd.walletReady.wallet = "0x0";
 			$("#gameDisconnectButton").hide();
 			$("#gameConnectButton").show();
+			nnd.game.hideGame();
 			nnd.walletReady.save();
 			nnd.walletReady.updateWalletDetails();
 		}, 
@@ -171,6 +183,7 @@ var nnd = {
 	}
 };
 $(document).ready(function (andthen) {
+	nnd.game.hideGame();
 	nnd.events.onDocumentReady();
 	andthen()
 });
