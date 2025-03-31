@@ -12,20 +12,48 @@
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
-		<div class="container-fluid">
+		<div class="container-fluid">	
 			<a href="/" class="px-3 navbar-brand">
 				<span class="text-notdead">NFTS</span> NOT&nbsp;&nbsp;DEAD</a>			
+
+				<div class="float-right">
+					<button type="button" class="xbtn btn btn-link text-white text-notdead text-decoration-none"  id="gameConnectButton" >CONNECT</button>
+						<button type="button" class="xbtn btn btn-link text-white text-notdead text-decoration-none" id="gameDisconnectButton">DISCONNECT</button>
+				</div>
 		</div>
 	</nav>
 	<div class="container">
-		<div class="row">
+		<div class="row d-none">
 			<div class="col-12 text-center">
-				<button type="button" class="xbtn btn btn-link text-white text-notdead text-decoration-none"  id="gameConnectButton" >CONNECT</button>
-				<button type="button" class="xbtn btn btn-link text-white text-notdead text-decoration-none" id="gameDisconnectButton">DISCONNECT</button>
+				<span class="walletDetails">Wallet: 0x0 Chain: 0x1</span>
+			</div>
+			<div class="col-12 text-center switchToBasePanel py-3" style="display: none;">
+				<button class="btn btn-notdead text-white btn-sm " onclick="nnd.walletReady.switchToBase()">Switch to base</button>
+			</div>
+		</div>
+
+		<div class="game-stage">
+
+			<div class="art">ART</div>
+
+			<div class="desc">DESC</div>
+
+			<div class="buttons">
+				<button type="button" data-action="start-tutorial" onclick="nnd.game.startGame()">START</button>
+				<button type="button" data-action="start-game" onclick="nnd.game.startGame()">START</button>
+				<button type="button"  data-action="option-approve">APPROVE</button>
+				<button type="button"  data-action="option-reject">REJECT</button>
+				<button type="button"  data-action="continue-game">CONTINUE</button>
+				<button type="button"  data-action="continue-tutorial">CONTINUE</button>
+				<button type="button"  data-action="restart-game">PLAY AGAIN</button>
+				<button type="button"  data-action="pay-to-play">REDEEM</button>
 			</div>
 		</div>
 	</div>
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.slim.min.js"> </script>
+
+	<script type="text/javascript" src="/apps/web3.common.js">
+	</script>
 	<script type="text/javascript" src="/apps/nndgame.js">
 	</script>
 </body>

@@ -213,6 +213,53 @@ button {
   box-shadow: #34343433 -4px -4px 10px 10px 10px;
 }
 
+.game-stage {
+  margin-block-start: 2vh;
+  padding-block-start: 3vh;
+  outline: solid 2px #888;
+  height: 85vh;
+  font-family: Roboto;
+  background-color: #D7228Faa;
+}
+
+.game-stage .art {
+  outline: solid 2px #888;
+  background-color: #101010;
+  width: 92%;
+  height: 60vh;
+  margin-inline: auto;
+  text-align: center;
+  padding-top: 38%;
+  font-family: Roboto;
+}
+
+.game-stage .desc {
+  width: 92%;
+  margin-inline: auto;
+  padding-block: 1vh;
+  text-align: center;
+  font-family: Roboto;
+  display: block;
+  height: 8vh;
+}
+
+.game-stage .buttons {
+  width: 92%;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.game-stage .buttons button {
+  text-align: center;
+  margin-inline: auto;
+  padding-block: .25vh;
+  width: 68vw;
+  font-size: 16pt;
+  letter-spacing: 4px;
+  margin-block-end: 0.25vh;
+  font-family: Roboto;
+}
+
 @media (max-width: 500px) {
   .navbar a {
     font-family: var(--titleFontFamily);
