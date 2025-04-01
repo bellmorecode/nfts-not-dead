@@ -234,7 +234,6 @@ button {
   height: 60vh;
   margin-inline: auto;
   text-align: center;
-  padding-block-start: 10vh;
   font-family: Roboto;
 }
 
@@ -258,11 +257,21 @@ button {
   text-align: center;
   margin-inline: auto;
   padding-block: .25vh;
-  width: 68vw;
+  width: 50vw;
   font-size: 16pt;
   letter-spacing: 4px;
   margin-block-end: 0.25vh;
   font-family: Roboto;
+}
+
+.tut-screens {
+  background-color: transparent;
+  height: 100%;
+  padding-top: 26%;
+}
+
+.gameTokenImage {
+  height: 100%;
 }
 
 @media (max-width: 500px) {

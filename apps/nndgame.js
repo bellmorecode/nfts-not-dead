@@ -1,12 +1,13 @@
 var nnd = {
 	version: "1.0.0.0",
 	game: {
+		most_recent_token: null,
 		tutorial: {
 			screens : {
 				splashScreen: {
 					content: {
 						type: "markup", 
-						value: `<h3 class="text-drippy">NFTS NOT DEAD: 'Not my NFTs' game</h3>`
+						value: `<div class="tut-screens"><h3 class="text-drippy">NFTS NOT DEAD: 'Not my NFTs' game</h3></div>`
 					},
 					description: `<p>Can you spot the imposter?</p>`,
 					buttons: ["start-tutorial"]
@@ -14,7 +15,7 @@ var nnd = {
 				introScreen: {
 					content: {
 						type: "markup", 
-						value: `<h3 class="text-drippy">How to play: 'Not my NFTs' game</h3>`
+						value: `<div class="tut-screens"><h3 class="text-drippy">How to play: 'Not my NFTs' game</h3></div>`
 					},
 					description: `<p>Find the copycat NFT... </p>`,
 					buttons: ["continue-tutorial"]
@@ -22,7 +23,7 @@ var nnd = {
 				warningScreen: {
 					content: {
 						type: "markup", 
-						value: `<h3 class="text-drippy">Warning</h3>`
+						value: `<div class="tut-screens"><h3 class="text-drippy">Warning</h3></div>`
 					},
 					description: `<p>Be Careful... </p>`,
 					buttons: ["start-game"]
@@ -46,11 +47,58 @@ var nnd = {
 				nnd.game.tutorial.__loadScreen(nnd.game.tutorial.screens.introScreen);	
 			}
 		},
+		getNextToken: function (callback) {
+			$.ajax({ 
+				url: `https://metamakerx.com/notdead/nextToken/${nnd.walletReady.wallet}`,
+				type: "POST", 
+				success: function (data) {
+					callback(data);
+				}
+			})
+		},
+		submitTokenResponse: function (id, option, callback) {
+			$.ajax({ 
+				url: `https://metamakerx.com/notdead/submitResponse/${nnd.walletReady.wallet}`,
+				data: JSON.stringify({ id, option }), 
+				processData: false, contentType: false,
+				type: "POST", 
+				success: function (data) {
+					callback(data);
+				}
+			})
+		},
+		approve: function () {
+			$("[data-action='option-approve']").prop("disabled", true);
+			$("[data-action='option-reject']").prop("disabled", true);
+			nnd.game.submitTokenResponse(nnd.game.most_recent_token.id, "approve", response => {
+
+			});
+		}, 
+		reject: function () {
+			$("[data-action='option-approve']").prop("disabled", true);
+			$("[data-action='option-reject']").prop("disabled", true);
+			nnd.game.submitTokenResponse(nnd.game.most_recent_token.id, "reject", response => {
+
+			});
+		},
 		resetGame: function () {
 			nnd.game.tutorial.prepTutorial();
 		},
 		startGame: function () {
-			alert('start game here!');
+			nnd.game.getNextToken(resp => {
+
+				console.log(resp);
+				nnd.game.most_recent_token = resp.token;
+
+				$(".game-stage .art").html(`<img src="${resp.token.imageUrl}" class="gameTokenImage" />`);
+				$(".game-stage .desc").html(`<div>${resp.token.name}</div><div><a target="_blank" href="${resp.token.marketPlaceLink}">${resp.token.collectionName}</a></div>`);
+
+				$(".game-stage .buttons button").hide();
+				$("[data-action='option-approve']").prop("disabled", false);
+				$("[data-action='option-reject']").prop("disabled", false);
+				$("[data-action='option-approve']").show();
+				$("[data-action='option-reject']").show();
+			})
 		},
 		hideGame: function () {
 			$(".game-stage .art").html("<h2 class='text-drippy'>Connect to Play</h2>");
