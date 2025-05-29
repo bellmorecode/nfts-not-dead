@@ -218,6 +218,12 @@ button {
   box-shadow: #34343433 -4px -4px 10px 10px 10px;
 }
 
+.connectors {
+  font-family: "Big Shoulders Stencil", sans-serif;
+  letter-spacing: 4px;
+  font-size: 20pt;
+}
+
 .game-stage {
   margin-block-start: 2vh;
   padding-block-start: 3vh;
@@ -228,17 +234,17 @@ button {
 }
 
 .game-stage .art {
-  outline: solid 2px #888;
+  outline: 0;
   background-color: #101010;
-  width: 92%;
-  height: 60vh;
+  width: 94%;
+  height: 56vh;
   margin-inline: auto;
   text-align: center;
   font-family: Roboto;
 }
 
 .game-stage .desc {
-  width: 92%;
+  width: 94%;
   margin-inline: auto;
   padding-block: 1vh;
   text-align: center;
@@ -248,9 +254,10 @@ button {
 }
 
 .game-stage .buttons {
-  width: 92%;
+  width: 94%;
   margin-inline: auto;
   text-align: center;
+  position: relative;
 }
 
 .game-stage .buttons button {
@@ -258,10 +265,48 @@ button {
   margin-inline: auto;
   padding-block: .25vh;
   width: 50vw;
-  font-size: 16pt;
-  letter-spacing: 4px;
+  font-size: 20pt;
+  letter-spacing: 6px;
   margin-block-end: 0.25vh;
-  font-family: Roboto;
+  font-family: "Big Shoulders Stencil", sans-serif;
+}
+
+.game-stage .status-message {
+  background-color: transparent;
+  width: 100%;
+  text-align: left;
+  /* outline: dotted 2px yellow; */
+  
+  z-index: 1000;
+}
+
+.game-stage .status-message .message-content {
+  background-color: #101010;
+  width: 94%;
+  margin-inline: auto;
+  padding-inline: 2vw;
+  color: #D7228F;
+  font-size: 24pt;
+  font-family: "Big Shoulders Stencil", sans-serif;
+  letter-spacing: 4px;
+}
+
+.game-stage .result-overlay {
+  background-color: transparent;
+  opacity: 0.7;
+  position: fixed;
+  top: 30vh;
+  left: 26vw;
+  width: 50vw;
+  height: 30vh;
+  font-size: 300;
+  text-align: center;
+
+}
+
+.game-stage .result-overlay .fa {
+  margin-block: auto;
+  display: inline-block;
 }
 
 .tut-screens {

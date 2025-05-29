@@ -1,5 +1,5 @@
-var nnd = {
-	version: "1.3.1",
+var bgmatch = {
+	version: "1.0.0",
 	game: {
 		skip_intro: false,
 		most_recent_token: null,
@@ -175,6 +175,130 @@ var nnd = {
 			$(".game-stage .buttons button").hide();
 		}
 	},
+	walletReady: {
+		accounts: [],
+		walletctxId: "wallet.bgmatch.v1",
+		wallet: "0x0",
+		chainId: "", chainName: "",
+		save: function () {
+			localStorage.setItem(bgmatch.walletReady.walletctxId, bgmatch.walletReady.wallet);
+		},
+		load: function () {
+			let w = localStorage.getItem(bgmatch.walletReady.walletctxId);
+			if (w) {
+				bgmatch.walletReady.wallet = w;
+			}
+			if (bgmatch.walletReady.wallet == "0x0") {
+				$("#gameDisconnectButton").hide();
+				$("#gameConnectButton").show();
+			} else {
+				$("#gameConnectButton").hide();
+				$("#gameDisconnectButton").show();
+			} 		
+		},
+		pageInit: function () {
+			///console.log('pageInit');
+			$(".result-overlay .fa").hide();
+			bgmatch.walletReady.load();
+			bgmatch.walletReady.checkForConnectedWallets(function (accounts ) {
+				bgmatch.walletReady.accounts = accounts;
+				//console.log(accounts);
+				// setup current status
+				if (bgmatch.walletReady.accounts.length == 0) {
+					bgmatch.walletReady.wallet = "0x0";
+					$("#gameDisconnectButton").hide();
+					$("#gameConnectButton").show();
+				} else {
+
+				}
+
+				bgmatch.ux.loadStats();
+
+				bgmatch.walletReady.updateWalletDetails();
+				if (bgmatch.walletReady.wallet != "0x0") {
+					bgmatch.game.resetGame();
+				}
+			})
+		},
+		updateWalletDetails: function () {
+			bgmatch.walletReady.chainId = window.ethereum.chainId
+			if (bgmatch.walletReady.chainId == "0x2105") {
+				$(".switchToBasePanel").hide();
+			} else {
+				$(".switchToBasePanel").show();
+			}
+			$(".walletDetails").html(`<span title="${bgmatch.walletReady.wallet}">${mmx.maskedAddress(bgmatch.walletReady.wallet)}</span>`);
+		},
+		checkForConnectedWallets: function (callback) {
+			if (window.ethereum) {
+				bgmatch.walletReady.chainId = window.ethereum.chainId;
+				window.ethereum.request({ method: "eth_accounts" }).then ( callback );
+			}
+		},
+		requestWalletAccess: function (callback) {
+			if (window.ethereum) {
+				window.ethereum.request({ method: "eth_requestAccounts" }).then ( callback );
+			}
+		},
+		requestChainSwitch: function (newChain, callback) {
+			if (window.ethereum) {
+					window.ethereum.request({
+						method: 'wallet_switchEthereumChain',
+						params: [{ chainId: newChain }], // chainId must be in hexadecimal numbers
+					  }).then(callback);
+
+			}
+		},
+		switchToBase: function () {
+			bgmatch.walletReady.requestChainSwitch("0x2105", function () {
+				bgmatch.walletReady.updateWalletDetails();
+			});
+		},
+		connect: function () {
+			console.log('connect');
+			bgmatch.walletReady.requestWalletAccess(data => {
+
+				console.log(data)
+				if (data.length == 0)
+				{
+					bgmatch.walletReady.wallet = "0x0";
+					$("#gameDisconnectButton").hide();
+					$("#gameConnectButton").show();
+					bgmatch.walletReady.updateWalletDetails();
+					bgmatch.game.resetGame();
+				} 
+				else 
+				{
+					bgmatch.walletReady.wallet = data[0];
+					$("#gameConnectButton").hide();
+					$("#gameDisconnectButton").show();
+					bgmatch.walletReady.save();
+					bgmatch.walletReady.updateWalletDetails();
+					bgmatch.game.resetGame();
+				}
+
+			});
+		}, 
+		disconnect: function () {
+			console.log('disconnect')
+			bgmatch.walletReady.wallet = "0x0";
+			$("#gameDisconnectButton").hide();
+			$("#gameConnectButton").show();
+			bgmatch.game.hideGame();
+			bgmatch.walletReady.save();
+			bgmatch.walletReady.updateWalletDetails();
+		}, 
+		onAccountChanged: function (accounts) {
+			console.log({accountChanged: accounts});
+			bgmatch.walletReady.wallet = accounts[0];
+			bgmatch.walletReady.updateWalletDetails();
+		}, 
+		onChainChanged: function (chainId) {
+			console.log({chainChanged: chainId });
+			bgmatch.walletReady.chainId = window.ethereum.chainId
+			bgmatch.walletReady.updateWalletDetails();
+		}
+	},
 	ux: {
 		attachEvents: function () { 
 			$("#gameConnectButton").on("click", nnd.walletReady.connect);
@@ -199,142 +323,10 @@ var nnd = {
 			})
 		}
 	},
-	walletReady: {
-		accounts: [],
-		walletctxId: "wallet.nnd.v1",
-		wallet: "0x0",
-		chainId: "", chainName: "",
-		save: function () {
-			localStorage.setItem(nnd.walletReady.walletctxId, nnd.walletReady.wallet);
-		},
-		load: function () {
-			let w = localStorage.getItem(nnd.walletReady.walletctxId);
-			if (w) {
-				nnd.walletReady.wallet = w;
-			}
-			if (nnd.walletReady.wallet == "0x0") {
-				$("#gameDisconnectButton").hide();
-				$("#gameConnectButton").show();
-			} else {
-				$("#gameConnectButton").hide();
-				$("#gameDisconnectButton").show();
-			} 		
-		},
-		pageInit: function () {
-			///console.log('pageInit');
-			$(".result-overlay .fa").hide();
-			nnd.walletReady.load();
-			nnd.walletReady.checkForConnectedWallets(function (accounts ) {
-				nnd.walletReady.accounts = accounts;
-				//console.log(accounts);
-				// setup current status
-				if (nnd.walletReady.accounts.length == 0) {
-					nnd.walletReady.wallet = "0x0";
-					$("#gameDisconnectButton").hide();
-					$("#gameConnectButton").show();
-				} else {
-
-				}
-
-				nnd.ux.loadStats();
-
-				nnd.walletReady.updateWalletDetails();
-				if (nnd.walletReady.wallet != "0x0") {
-					nnd.game.resetGame();
-				}
-			})
-		},
-		updateWalletDetails: function () {
-			nnd.walletReady.chainId = window.ethereum.chainId
-			if (nnd.walletReady.chainId == "0x2105") {
-				$(".switchToBasePanel").hide();
-			} else {
-				$(".switchToBasePanel").show();
-			}
-			$(".walletDetails").html(`<span title="${nnd.walletReady.wallet}">${mmx.maskedAddress(nnd.walletReady.wallet)}</span>`);
-		},
-		checkForConnectedWallets: function (callback) {
-			if (window.ethereum) {
-				nnd.walletReady.chainId = window.ethereum.chainId;
-				window.ethereum.request({ method: "eth_accounts" }).then ( callback );
-			}
-		},
-		requestWalletAccess: function (callback) {
-			if (window.ethereum) {
-				window.ethereum.request({ method: "eth_requestAccounts" }).then ( callback );
-			}
-		},
-		requestChainSwitch: function (newChain, callback) {
-			if (window.ethereum) {
-					window.ethereum.request({
-						method: 'wallet_switchEthereumChain',
-						params: [{ chainId: newChain }], // chainId must be in hexadecimal numbers
-					  }).then(callback);
-
-			}
-		},
-		switchToBase: function () {
-			nnd.walletReady.requestChainSwitch("0x2105", function () {
-				nnd.walletReady.updateWalletDetails();
-			});
-		},
-		connect: function () {
-			console.log('connect');
-			nnd.walletReady.requestWalletAccess(data => {
-
-				console.log(data)
-				if (data.length == 0)
-				{
-					nnd.walletReady.wallet = "0x0";
-					$("#gameDisconnectButton").hide();
-					$("#gameConnectButton").show();
-					nnd.walletReady.updateWalletDetails();
-					nnd.game.resetGame();
-				} 
-				else 
-				{
-					nnd.walletReady.wallet = data[0];
-					$("#gameConnectButton").hide();
-					$("#gameDisconnectButton").show();
-					nnd.walletReady.save();
-					nnd.walletReady.updateWalletDetails();
-					nnd.game.resetGame();
-				}
-
-			});
-		}, 
-		disconnect: function () {
-			console.log('disconnect')
-			nnd.walletReady.wallet = "0x0";
-			$("#gameDisconnectButton").hide();
-			$("#gameConnectButton").show();
-			nnd.game.hideGame();
-			nnd.walletReady.save();
-			nnd.walletReady.updateWalletDetails();
-		}, 
-		onAccountChanged: function (accounts) {
-			console.log({accountChanged: accounts});
-			nnd.walletReady.wallet = accounts[0];
-			nnd.walletReady.updateWalletDetails();
-		}, 
-		onChainChanged: function (chainId) {
-			console.log({chainChanged: chainId });
-			nnd.walletReady.chainId = window.ethereum.chainId
-			nnd.walletReady.updateWalletDetails();
-		}
-	},
-	events: {
-		onDocumentReady: function () {
-
-			nnd.ux.attachEvents();
-			nnd.walletReady.pageInit();
-			mmx.subscribeToChainEvents(nnd.walletReady.onAccountChanged, nnd.walletReady.onChainChanged);
-		}
+	onPageLoaded: function (ev) {
+		bgmatch.game.hideGame();
+		bgmatch.ux.attachEvents();
+		bgmatch.walletReady.pageInit();
+		mmx.subscribeToChainEvents(bgmatch.walletReady.onAccountChanged, bgmatch.walletReady.onChainChanged);
 	}
 };
-$(document).ready(function (andthen) {
-	window['__nnd'] = nnd;
-	nnd.game.hideGame();
-	nnd.events.onDocumentReady();
-	andthen()
-});
